@@ -4,14 +4,22 @@ import supabase from "./supabaseClient";
 import Auth from "./pages/auth";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
-console.log(supabase);
+// console.log(supabase);
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Auth />}></Route>
-      <Route path="/quiz" element={<Quiz />}></Route>
+      <Route
+        path="/quiz"
+        element={
+          <ProtectedRoute>
+            <Quiz />
+          </ProtectedRoute>
+        }
+      ></Route>
       <Route path="/result" element={<Result />}></Route>
     </Routes>
   );
