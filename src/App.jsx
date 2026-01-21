@@ -20,7 +20,14 @@ function App() {
           </ProtectedRoute>
         }
       ></Route>
-      <Route path="/result" element={<Result />}></Route>
+      <Route
+        path="/result"
+        element={
+          <ProtectedRoute>
+            <Result />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

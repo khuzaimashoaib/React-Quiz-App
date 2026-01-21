@@ -1,28 +1,31 @@
 import { useEffect, useState } from "react";
 import "./Quiz.css";
 import supabase from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 const TOTAL_QUESTIONS = 10;
 
 function Quiz() {
+  const navigate = useNavigate();
+
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [score, setScore] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
   }, []);
 
   async function fetchQuestions() {
-    const { data, error } = await supabase
-      .from("questions")
-      .select("*")
-      .order("id", "RANDOM()")
-      .limit(TOTAL_QUESTIONS);
+    const { data, error } = await supabase.rpc("get_random_questions", {
+      question_limit: TOTAL_QUESTIONS,
+    });
 
-    console.log(data);
+    console.log("Fetched questions:", data);
+    console.log("Number of questions:", data?.length);
 
     if (!error) {
       setQuestions(data);
@@ -46,18 +49,32 @@ function Quiz() {
   function handleOptionChange(option) {
     setSelectedOption(option);
   }
-  function handleNext() {
+  async function handleNext() {
+
+if (isSubmitting) return;
+
+    let newScore = score;
+
     if (selectedOption?.is_correct) {
-      setScore((prev) => prev + 1);
+      newScore += 1;
+      setScore(newScore);
     }
 
     if (currentIndex < TOTAL_QUESTIONS - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      console.log(
-        "Quiz Finished",
-        score + (selectedOption?.is_correct ? 1 : 0),
-      );
+      setIsSubmitting(true);
+      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      await supabase.from("quiz_results").insert({
+        user_id: user.id,
+        score: newScore,
+        total: TOTAL_QUESTIONS,
+      });
+      navigate("/result");
     }
   }
 
@@ -95,14 +112,17 @@ function Quiz() {
 
           {/* Footer */}
           <div className="quiz-footer">
-            <button className="quiz-btn secondary">Previous</button>
+          
             <button
               className="quiz-btn primary"
               onClick={handleNext}
-              // disabled={
-              //   !selectedOption}
+              disabled={
+                // !selectedOption 
+                // ||
+                 isSubmitting}
             >
-              Next
+              {isSubmitting ? "Submitting..." : "Next"}
+          
             </button>
           </div>
         </div>
