@@ -11,6 +11,7 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,6 +71,10 @@ function Auth() {
   return (
     <>
       <div className="auth-container">
+        <h1 className="auth-welcome">
+         Welcome to the Quiz App
+        </h1>
+
         <div className="auth-card">
           <h2 className="auth-title">{isLogin ? "Login" : "Create Account"}</h2>
 

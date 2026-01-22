@@ -42,48 +42,64 @@ function Result() {
   let message = "";
   let statusClass = "";
 
-  if (percentage >= 80) {message = "Excellent work!" ;
+  if (percentage >= 80) {
+    message = "Excellent work!";
     statusClass = "pass";
-
-  }
-  else if (percentage >= 50) {message = "Good effort!";
+  } else if (percentage >= 50) {
+    message = "Good effort!";
     statusClass = "good";
-  }
-  else {message = "Needs improvement.";
+  } else {
+    message = "Needs improvement.";
     statusClass = "fail";
   }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate("/");
+  }
+
+  function handleRetakeQuiz() {
+    navigate("/quiz"); // apna quiz route yahan confirm kar lena
+  }
+
   return (
     <>
       <div className="result-container">
-        <div className="result-card">
-          {/* Header */}
-          <h2 className="result-title">Quiz Completed 🎉</h2>
-          <p className="result-subtitle">Here is your performance summary</p>
-        </div>
-
-        {/* Status */}
-        <div className={`result-status ${statusClass}`}>{message}</div>
-
-        {/* Details */}
-        <div className="result-details">
-          <div>
-            <span>Total Questions: </span>
-            <strong>{result.total}</strong>
+        <div className="result_container_inner">
+          <div className="result-card">
+            {/* Header */}
+            <h2 className="result-title">Quiz Completed 🎉</h2>
+            <p className="result-subtitle">Here is your performance summary</p>
           </div>
-          <div>
-            <span>Correct Answers: </span>
-            <strong>{result.score}</strong>
-          </div>
-          <div>
-            <span>Wrong Answers: </span>
-            <strong>{result.total - result.score}</strong>
-          </div>
-        </div>
 
-        {/* Actions */}
-        <div className="result-actions">
-          <button className="btn secondary">Retake Quiz</button>
-          <button className="btn primary">Logout</button>
+          {/* Status */}
+          <div className={`result-status ${statusClass}`}>{message}</div>
+
+          {/* Details */}
+          <div className="result-details">
+            <div>
+              <span>Total Questions: </span>
+              <strong>{result.total}</strong>
+            </div>
+            <div>
+              <span>Correct Answers: </span>
+              <strong>{result.score}</strong>
+            </div>
+            <div>
+              <span>Wrong Answers: </span>
+              <strong>{result.total - result.score}</strong>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="result-actions">
+            <button className="btn secondary" onClick={handleRetakeQuiz}>
+              Retake Quiz
+            </button>
+            <button className="btn primary" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </>

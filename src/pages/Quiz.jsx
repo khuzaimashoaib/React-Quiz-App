@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./Quiz.css";
 import supabase from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 const TOTAL_QUESTIONS = 10;
 
@@ -50,8 +51,8 @@ function Quiz() {
     setSelectedOption(option);
   }
   async function handleNext() {
-
-if (isSubmitting) return;
+    if (isSubmitting) return;
+    console.log("hit");
 
     let newScore = score;
 
@@ -64,7 +65,7 @@ if (isSubmitting) return;
       setCurrentIndex((prev) => prev + 1);
     } else {
       setIsSubmitting(true);
-      
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -74,12 +75,14 @@ if (isSubmitting) return;
         score: newScore,
         total: TOTAL_QUESTIONS,
       });
+
       navigate("/result");
     }
   }
 
   return (
     <>
+    <Header />
       <div className="quiz-container">
         <div className="quiz-card">
           {/* Header */}
@@ -112,17 +115,16 @@ if (isSubmitting) return;
 
           {/* Footer */}
           <div className="quiz-footer">
-          
             <button
               className="quiz-btn primary"
               onClick={handleNext}
               disabled={
-                // !selectedOption 
+                // !selectedOption
                 // ||
-                 isSubmitting}
+                isSubmitting
+              }
             >
               {isSubmitting ? "Submitting..." : "Next"}
-          
             </button>
           </div>
         </div>

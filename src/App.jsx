@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
+import "./index.css";
 import supabase from "./supabaseClient";
 import Auth from "./pages/auth";
 import Quiz from "./pages/Quiz";
