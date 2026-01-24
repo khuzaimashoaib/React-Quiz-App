@@ -40,7 +40,7 @@ function Header() {
     <header className="app-header">
       {/* Left: Logo */}
       <div className="header-left">
-        <img src="src/assets/Quiz-icon.png" alt="Logo" className="logo" />
+        <img src="Quiz-Icon.png" alt="Logo" className="logo" />
       </div>
 
       {/* Right: User */}
@@ -48,7 +48,7 @@ function Header() {
         <span className="user-name">{userName}</span>
        
         <img
-          src="src/assets/User-avatar.png"
+          src="User-avatar.png"
           alt="User"
           className="user-avatar"
         />
