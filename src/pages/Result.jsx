@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Result.css";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+} from "@mui/material";
 
 function Result() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [dialogAction, setDialogAction] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +44,12 @@ function Result() {
 
     setLoading(false);
   }
-  if (loading) return <p className="loading">Loading result...</p>;
+  if (loading)
+    return (
+      <div className="loader-center">
+        <CircularProgress size={50} />
+      </div>
+    );
   if (!result) return <p>No result found</p>;
 
   const percentage = Math.round((result.score / result.total) * 100);
@@ -53,17 +68,62 @@ function Result() {
     statusClass = "fail";
   }
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmAction = async () => {
+    setOpen(false);
+    if (dialogAction === "logout") {
+      await supabase.auth.signOut();
+      navigate("/");
+    } else if (dialogAction === "retake") {
+      navigate("/quiz");
+    }
+  };
+
   async function handleLogout() {
-    await supabase.auth.signOut();
-    navigate("/");
+    setDialogAction("logout");
+    setOpen(true);
   }
 
   function handleRetakeQuiz() {
-    navigate("/quiz"); // apna quiz route yahan confirm kar lena
+    setDialogAction("retake");
+    setOpen(true);
   }
 
   return (
     <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "1.3rem",
+          }}
+        >
+          {dialogAction === "logout"
+            ? "Are you sure you want to logout?"
+            : "Do you want to retake the quiz?"}
+        </DialogTitle>
+
+        <DialogActions sx={{ justifyContent: "center", gap: 2 }}>
+          <Button
+            onClick={handleClose}
+            sx={{ color: "#555", borderColor: "#aaa" }}
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmAction}>
+            {dialogAction === "logout" ? "Logout" : "Retake"}
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className="result-container">
         <div className="result_container_inner">
           <div className="result-card">

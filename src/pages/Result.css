@@ -127,9 +127,10 @@
   background-color: #616161;
 }
 
-.loading {
-  font-size: 18px;
-  color: #b0b0b0;
-  text-align: center;
-  margin-top: 50px;
+ .loader-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #000000;
 }

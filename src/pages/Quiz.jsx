@@ -119,8 +119,8 @@ function Quiz() {
               className="quiz-btn primary"
               onClick={handleNext}
               disabled={
-                // !selectedOption
-                // ||
+                !selectedOption
+                ||
                 isSubmitting
               }
             >

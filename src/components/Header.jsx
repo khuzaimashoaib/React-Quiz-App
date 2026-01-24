@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./Header.css";
 import supabase from "../supabaseClient";
 
+
 function Header() {
   const [userName, setUserName] = useState("");
 
@@ -45,6 +46,7 @@ function Header() {
       {/* Right: User */}
       <div className="header-right">
         <span className="user-name">{userName}</span>
+       
         <img
           src="src/assets/User-avatar.png"
           alt="User"
